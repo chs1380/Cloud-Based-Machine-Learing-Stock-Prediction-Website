@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+    Stock - Prediction
+{% endblock %}
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1 class="display-4">Make prediction</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="" method="POST">
+                            {{ form.csrf_token() }}
+                            {{ form.ml_model.label }}
+                            <div class="form-group">
+                                {{ form.ml_model(class="form-control", placeholder="Please select a model") }}
+                            </div>
+                            {{ form.stock_code.label }}
+                            <div class="form-group">
+                                {{ form.stock_code(class="form-control", placeholder="Please enter a stock name") }}
+                            </div>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <br/>
+                <br/>
+                <br/>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Result ID</th>
+                        <th>Stock Code</th>
+                        <th>Date of prediction</th>
+                        <th>Price during date of prediction</th>
+                        <th>Price after 10 days</th>
+                        <th>Price after 60 days</th>
+                        <th>Price after 365 days</th>
+                        <th>Model</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for record in prediction_histroy %}
+                        <tr>
+                            <td>{{ record.Result_id }}</td>
+                            <td>{{ record.Stock_code }}</td>
+                            <td>{{ record.Date_that_init_predict }}</td>
+                            <th>{{ record.Old_price }}</th>
+                            <th>{{ record.price_after_10 }}</th>
+                            <th>{{ record.price_after_60 }}</th>
+                            <th>{{ record.price_after_360 }}</th>
+                            <th>{{ record.Model }}</th>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
