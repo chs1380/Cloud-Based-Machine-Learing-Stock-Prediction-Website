@@ -33,9 +33,9 @@ def prediction_fucnction(df):
 
 
     # Traning, testing to plot graphs
-    model_10days=joblib.load('LR_model_10_Days')
-    model_60_days=joblib.load('LR_model_60_Days')
-    model_365_days=joblib.load('LR_model_365_Days')
+    model_10days=joblib.load('LR_10_Days')
+    model_60_days=joblib.load('LR_60_Days')
+    model_365_days=joblib.load('LR_365_Days')
 
     prediction = df_today[features_to_fit]
 
@@ -119,19 +119,19 @@ print(result)
 #     X = df[features_to_fit]
 #     Y = df['NextClose']
 #
-#     # train the model
+#     # train the prediction
 #     # split data for training, 70% for traing and 30 % for training
 #     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3)
 #
 #     # Traning, testing to plot graphs
-#     model = LinearRegression()
+#     prediction = LinearRegression()
 #
-#     model.fit(X_train, Y_train)
+#     prediction.fit(X_train, Y_train)
 #
-#     joblib.dump(model,"LR_model_365_Days")
+#     joblib.dump(prediction,"LR_365_Days")
 #     prediction = df_today[features_to_fit]
 #
-#     future_price = model.predict(prediction)
+#     future_price = prediction.predict(prediction)
 #     df['NextClose'] = df['Close'].shift(-forecast_day)
 #
 #     # the actual data
@@ -171,7 +171,7 @@ print(result)
 #     X = df[features_to_fit]
 #     Y = df['NextClose']
 #
-#     # train the model
+#     # train the prediction
 #     # split data for training, 70% for traing and 30 % for training
 #     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3)
 #

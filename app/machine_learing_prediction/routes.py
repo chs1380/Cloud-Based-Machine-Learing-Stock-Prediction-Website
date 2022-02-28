@@ -21,6 +21,7 @@ from sklearn.neural_network import MLPClassifier, MLPRegressor
 import joblib
 
 
+
 def get_history_price(stockCode):
     end_date = datetime.now()
     start_date = datetime.now() - relativedelta(years=10)
@@ -32,8 +33,10 @@ def get_history_price(stockCode):
 
 
 def prediction_fucnction(df):
+
     df = pd.read_csv(df)
     # modify data drop all columns except the closing price
+
     # set date as index and data type as date time
     df['Date'] = pd.to_datetime(df.Date)
     df.index = df['Date']
@@ -53,19 +56,18 @@ def prediction_fucnction(df):
 
     df.fillna(0, inplace=True)
 
-    # use model to predict the stock price
-    model_10days = joblib.load('LR_model_10_Days')
-    model_60_days = joblib.load('LR_model_60_Days')
-    model_365_days = joblib.load('LR_model_365_Days')
+    # Traning, testing to plot graphs
+    model_10days=joblib.load('app/machine_learing_prediction/LR_10_Days')
+    model_60_days=joblib.load('app/machine_learing_prediction/LR_60_Days')
+    model_365_days=joblib.load('app/machine_learing_prediction/LR_365_Days')
 
     prediction = df_today[features_to_fit]
 
-    future_price_10_days = model_10days.predict(prediction)
-    future_price_60_days = model_60_days.predict(prediction)
-    future_price_365_days = model_365_days.predict(prediction)
+    future_price_10_days= model_10days.predict(prediction)
+    future_price_60_days= model_60_days.predict(prediction)
+    future_price_365_days= model_365_days.predict(prediction)
 
-    return future_price_10_days, future_price_60_days, future_price_365_days
-
+    return future_price_10_days,future_price_60_days,future_price_365_days
 
 def prediction_fucnction_mlp(df):
     df = pd.read_csv(df)
@@ -93,9 +95,9 @@ def prediction_fucnction_mlp(df):
 
 
     # Use model to predict the stock price
-    model_10days = joblib.load('../static/MLP_model_10_Days')
-    model_60_days = joblib.load('../static/MLP_model_60_Days')
-    model_365_days = joblib.load('../static/MLP_model_365_Days')
+    model_10days = joblib.load('app/machine_learing_prediction/MLP_model_10_Days')
+    model_60_days = joblib.load('app/machine_learing_prediction/MLP_model_60_Days')
+    model_365_days = joblib.load('app/machine_learing_prediction/MLP_model_365_Days')
 
     prediction = df_today[features_to_fit]
 
@@ -103,8 +105,6 @@ def prediction_fucnction_mlp(df):
     future_price_60_days = model_60_days.predict(prediction)
     future_price_365_days = model_365_days.predict(prediction)
     return future_price_10_days, future_price_60_days, future_price_365_days
-
-
 
 @bp.route('/ml_predict', methods=['GET', 'POST'])
 def prediction():
@@ -122,40 +122,41 @@ def prediction():
             # today_price
             today_price = yf.Ticker(form.stock_code.data)
             price = today_price.info['regularMarketPrice']
-            # prediction with model and mark to database
+            # prediction with prediction and mark to database
             future_price = prediction_fucnction(stock_code + '.csv')
             prediction_record = Result(Stock_code=stock_code, Old_price=price,
                                        price_after_10=round(int(future_price[0]), 3),
                                        price_after_60=round(int(future_price[1]), 3),
                                        price_after_360=round(int(future_price[2]), 3), Model="linear regression",
                                        Date_that_init_predict=datetime.now())
-                                       #user_id=current_user.User_id)
+            # user_id=current_user.User_id)
             db.session.add(prediction_record)
             db.session.commit()
             os.remove(stock_code + '.csv')
             flash('Success predict stock ' + str(stock_code) + ' price after 10 days will be $' + str(
                 round(int(future_price[0]), 3)), category='success')
             return redirect('/ml_predict')
-#
-        elif get_model_name.Model_name == "MLP model":
+        #
+        elif get_model_name.Model_name == "MLP prediction":
             # first get stock csv first
             get_history_price(stock_code)
             # train and predict price of stock
             # today_price
             today_price = yf.Ticker(form.stock_code.data)
             price = today_price.info['regularMarketPrice']
-            # prediction with model and mark to database
+            # prediction with prediction and mark to database
             future_price = prediction_fucnction_mlp(stock_code + '.csv')
             prediction_record = Result(Stock_code=stock_code, Old_price=price,
                                        price_after_10=round(int(future_price[0]), 3),
                                        price_after_60=round(int(future_price[1]), 3),
-                                       price_after_360=round(int(future_price[2]), 3), Model="MLP model",
+                                       price_after_360=round(int(future_price[2]), 3), Model="MLP prediction",
                                        Date_that_init_predict=datetime.now(),
                                        user_id=current_user.User_id)
             db.session.add(prediction_record)
             db.session.commit()
             os.remove(stock_code + '.csv')
-            flash('Success predict stock ' + str(stock_code) + ' price after 10 days will be $' + str(round(int(future_price[0]), 3)),
+            flash('Success predict stock ' + str(stock_code) + ' price after 10 days will be $' + str(
+                round(int(future_price[0]), 3)),
                   category='success')
             return redirect('/ml_predict')
     return render_template('machine_learning_prediction/prediction.html',

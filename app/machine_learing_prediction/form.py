@@ -4,6 +4,6 @@ from flask_wtf import FlaskForm
 
 
 class ml_form(FlaskForm):
-    ml_model=SelectField('Select a machine learning model',choices=[],validators=[DataRequired()])
+    ml_model=SelectField('Select a machine learning prediction',choices=[],validators=[DataRequired()])
     stock_code=StringField(validators=[DataRequired()])
     submit = SubmitField('Submit')

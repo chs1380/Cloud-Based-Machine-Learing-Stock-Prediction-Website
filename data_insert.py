@@ -3,7 +3,7 @@ from model import *
 from werkzeug.security import generate_password_hash, check_password_hash
 
 model1=Model(Model_name="linear regression")
-model2=Model(Model_name="MLP model")
+model2=Model(Model_name="MLP prediction")
 
 
 def create_user(User_name, Email, password):
