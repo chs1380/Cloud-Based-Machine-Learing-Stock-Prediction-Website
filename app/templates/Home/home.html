@@ -5,32 +5,43 @@
 {% endblock %}
 
 {% block content %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="container">
 
-  <div class="container">
-
-      <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-        <h1>Stock prediction with machine learning</h1>
-        <p>Would you like to know the future stock price? In this website we offer you two machine learning model for you to predict stock price.</p>
-        <p><a class="btn btn-primary btn-large" href="/ml_predict">Click here to try! &raquo;</a></p>
-      </div>
-
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="span4">
-          <h2>First model - Linear Regression</h2>
-           <p>Linear regression model use set of predictor variable to predict the outcome variable, in this model the independent variable will be exponential moving average in 10 days periods
-            and closing price of the day to predict the dependent variable of the next closing price</p>
-          <p><a class="btn" href="/ml_predict">Click here go to predict &raquo;</a></p>
+        <!-- Main hero unit for a primary marketing message or call to action -->
+        <div class="hero-unit">
+            <h1>Stock prediction with machine learning</h1>
+            <p>Would you like to know the future stock price? In this website we offer you two machine learning model
+                for you to predict stock price.</p>
+            <p><a class="btn btn-primary btn-large" href="/ml_predict">Click here to try! &raquo;</a></p>
         </div>
-        <div class="span4">
-          <h2>Second model - Multilayer perceptron </h2>
-           <p>Multilayer perceptron is a feed forward neural network, it includes input layer, output layer and hidden layer. It have multiple use cases such as pattern classification and prediction
-           it is design to solve problems that are not linearly separable</p>
-          <p><a class="btn" href="/ml_predict">Click here go to predict &raquo;</a></p>
-       </div>
 
-  </div>
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="span4">
+                <h2>First model - Linear Regression</h2>
+                <p>Linear regression model use set of predictor variable to predict the outcome variable, in this model
+                    the independent variable will be exponential moving average in 10 days periods
+                    and closing price of the day to predict the dependent variable of the next closing price</p>
+                <p><a class="btn" href="/ml_predict">Click here go to predict &raquo;</a></p>
+            </div>
+            <div class="span4">
+                <h2>Second model - Multilayer perceptron </h2>
+                <p>Multilayer perceptron is a feed forward neural network, it includes input layer, output layer and
+                    hidden layer. It have multiple use cases such as pattern classification and prediction
+                    it is design to solve problems that are not linearly separable</p>
+                <p><a class="btn" href="/ml_predict">Click here go to predict &raquo;</a></p>
+            </div>
+
+        </div>
 
 
 {% endblock %}

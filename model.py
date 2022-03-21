@@ -7,6 +7,10 @@ class User(db.Model,UserMixin):
     User_Password=db.Column(db.String(20),nullable=False)
     result=db.relationship('Result',backref='user',lazy=True)
     email=db.Column(db.String(100),nullable=False)
+
+    def get_id(self):
+        return (self.User_id)
+
     def __repr__(self):
         return '<User %r>' % self.User_name
 
@@ -20,8 +24,11 @@ class Result(db.Model):
     price_after_360=db.Column(db.Float())
     user_id=db.Column(db.Integer,db.ForeignKey('user.User_id'))
     Model=db.Column(db.String(20),nullable=False)
+    def __repr__(self):
+        return '<Result %r>' % self.Result_id
 
 class Model(db.Model):
     Model_id = db.Column(db.Integer(),unique=True, primary_key=True, nullable=False)
     Model_name=db.Column(db.String(20),nullable=False)
-
+    def __repr__(self):
+        return '<Model %r>' % self.Model_name
