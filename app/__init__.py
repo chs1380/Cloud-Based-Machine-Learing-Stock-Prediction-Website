@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_login import UserMixin, LoginManager
 from datetime import timedelta
 from flask_httpauth import HTTPBasicAuth
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -14,6 +15,8 @@ auth = HTTPBasicAuth(app)
 
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
+mail = Mail(app)
+
 
 from model import User
 

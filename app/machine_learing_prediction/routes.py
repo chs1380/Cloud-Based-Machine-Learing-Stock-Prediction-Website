@@ -110,7 +110,7 @@ def prediction_fucnction_mlp(df):
 def prediction():
     form = ml_form(csrf_enabled=False)
     form.ml_model.choices = [(model.Model_id, model.Model_name) for model in Model.query.all()]
-    prediction_histroy = Result.query.all()  # query all the history prediction
+    prediction_histroy = Result.query.filter_by(user_id=current_user.User_id)  # query all the history prediction
     if request.method == 'POST' and form.validate_on_submit():
         stock_code = form.stock_code.data
         get_model_name = Model.query.filter_by(
@@ -127,7 +127,7 @@ def prediction():
             prediction_record = Result(Stock_code=stock_code, Old_price=price,
                                        price_after_10=round(int(future_price[0]), 3),
                                        price_after_60=round(int(future_price[1]), 3),
-                                       price_after_360=round(int(future_price[2]), 3), Model="linear regression",
+                                       price_after_360=round(int(future_price[2]), 3), Model="linear regression",user_id=current_user.User_id,
                                        Date_that_init_predict=datetime.now())
             # user_id=current_user.User_id)
             db.session.add(prediction_record)

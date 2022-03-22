@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, flash, url_for, redirect
 from app.Login import bp
 import fileinput
 from config import Config
-from app.Login.form import loginform, RegistrationForm
+from app.Login.form import loginform, RegistrationForm, ResetPasswordForm
 from model import User
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import db
@@ -50,7 +50,3 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login_page.login'))
     return render_template('Login/register.html', title='Register', form=form)
-
-@bp.route('/reset_password', methods=['GET', 'POST'])
-def reset_password():
-    pass
