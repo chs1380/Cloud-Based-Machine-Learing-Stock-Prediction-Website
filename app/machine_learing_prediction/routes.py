@@ -106,58 +106,64 @@ def prediction_fucnction_mlp(df):
     future_price_365_days = model_365_days.predict(prediction)
     return future_price_10_days, future_price_60_days, future_price_365_days
 
+@login_required
 @bp.route('/ml_predict', methods=['GET', 'POST'])
 def prediction():
     form = ml_form(csrf_enabled=False)
     form.ml_model.choices = [(model.Model_id, model.Model_name) for model in Model.query.all()]
-    prediction_histroy = Result.query.filter_by(user_id=current_user.User_id)  # query all the history prediction
-    if request.method == 'POST' and form.validate_on_submit():
-        stock_code = form.stock_code.data
-        get_model_name = Model.query.filter_by(
-            Model_id=form.ml_model.data).first()
-        if get_model_name.Model_name == "linear regression":
-            # first get stock csv first
-            get_history_price(stock_code)
-            # train and predict price of stock
-            # today_price
-            today_price = yf.Ticker(form.stock_code.data)
-            price = today_price.info['regularMarketPrice']
-            # prediction with prediction and mark to database
-            future_price = prediction_fucnction(stock_code + '.csv')
-            prediction_record = Result(Stock_code=stock_code, Old_price=price,
-                                       price_after_10=round(int(future_price[0]), 3),
-                                       price_after_60=round(int(future_price[1]), 3),
-                                       price_after_360=round(int(future_price[2]), 3), Model="linear regression",user_id=current_user.User_id,
-                                       Date_that_init_predict=datetime.now())
-            # user_id=current_user.User_id)
-            db.session.add(prediction_record)
-            db.session.commit()
-            os.remove(stock_code + '.csv')
-            flash('Success predict stock ' + str(stock_code) + ' price after 10 days will be $' + str(
-                round(int(future_price[0]), 3)), category='success')
-            return redirect('/ml_predict')
-        #
-        elif get_model_name.Model_name == "MLP prediction":
-            # first get stock csv first
-            get_history_price(stock_code)
-            # train and predict price of stock
-            # today_price
-            today_price = yf.Ticker(form.stock_code.data)
-            price = today_price.info['regularMarketPrice']
-            # prediction with prediction and mark to database
-            future_price = prediction_fucnction_mlp(stock_code + '.csv')
-            prediction_record = Result(Stock_code=stock_code, Old_price=price,
-                                       price_after_10=round(int(future_price[0]), 3),
-                                       price_after_60=round(int(future_price[1]), 3),
-                                       price_after_360=round(int(future_price[2]), 3), Model="MLP prediction",
-                                       Date_that_init_predict=datetime.now(),
-                                       user_id=current_user.User_id)
-            db.session.add(prediction_record)
-            db.session.commit()
-            os.remove(stock_code + '.csv')
-            flash('Success predict stock ' + str(stock_code) + ' price after 10 days will be $' + str(
-                round(int(future_price[0]), 3)),
-                  category='success')
-            return redirect('/ml_predict')
+    prediction_histroy=[]
+    if current_user.is_authenticated:
+        prediction_histroy = Result.query.filter_by(user_id=current_user.User_id)  # query all the history prediction
+        if request.method == 'POST' and form.validate_on_submit():
+            stock_code = form.stock_code.data
+            get_model_name = Model.query.filter_by(
+                Model_id=form.ml_model.data).first()
+            if get_model_name.Model_name == "linear regression":
+                # first get stock csv first
+                get_history_price(stock_code)
+                # train and predict price of stock
+                # today_price
+                today_price = yf.Ticker(form.stock_code.data)
+                price = today_price.info['regularMarketPrice']
+                # prediction with prediction and mark to database
+                future_price = prediction_fucnction(stock_code + '.csv')
+                prediction_record = Result(Stock_code=stock_code, Old_price=price,
+                                           price_after_10=round(int(future_price[0]), 3),
+                                           price_after_60=round(int(future_price[1]), 3),
+                                           price_after_360=round(int(future_price[2]), 3), Model="linear regression",user_id=current_user.User_id,
+                                           Date_that_init_predict=datetime.now())
+                # user_id=current_user.User_id)
+                db.session.add(prediction_record)
+                db.session.commit()
+                os.remove(stock_code + '.csv')
+                flash('Success predict stock ' + str(stock_code) + ' price after 10 days will be $' + str(
+                    round(int(future_price[0]), 3)), category='success')
+                return redirect('/ml_predict')
+            #
+            elif get_model_name.Model_name == "MLP prediction":
+                # first get stock csv first
+                get_history_price(stock_code)
+                # train and predict price of stock
+                # today_price
+                today_price = yf.Ticker(form.stock_code.data)
+                price = today_price.info['regularMarketPrice']
+                # prediction with prediction and mark to database
+                future_price = prediction_fucnction_mlp(stock_code + '.csv')
+                prediction_record = Result(Stock_code=stock_code, Old_price=price,
+                                           price_after_10=round(int(future_price[0]), 3),
+                                           price_after_60=round(int(future_price[1]), 3),
+                                           price_after_360=round(int(future_price[2]), 3), Model="MLP prediction",
+                                           Date_that_init_predict=datetime.now(),
+                                           user_id=current_user.User_id)
+                db.session.add(prediction_record)
+                db.session.commit()
+                os.remove(stock_code + '.csv')
+                flash('Success predict stock ' + str(stock_code) + ' price after 10 days will be $' + str(
+                    round(int(future_price[0]), 3)),
+                      category='success')
+                return redirect('/ml_predict')
+    else:
+        flash('Please register an account to use prediction!',category='danger')
+        return redirect(url_for('Home_Page.home'))
     return render_template('machine_learning_prediction/prediction.html',
                            prediction_histroy=prediction_histroy, form=form)

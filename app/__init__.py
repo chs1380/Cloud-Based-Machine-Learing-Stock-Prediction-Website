@@ -49,6 +49,6 @@ def create_app():
 
     with app.app_context():
         db.create_all()  # Create sql tables for our data models, init creation after all import
-                         # setup
+        # setup
     return app
 
