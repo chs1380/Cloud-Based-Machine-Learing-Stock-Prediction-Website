@@ -50,3 +50,4 @@ Werkzeug==2.0.3
 WTForms==3.0.1
 yfinance==0.1.70
 zipp==3.7.0
+gunicorn
