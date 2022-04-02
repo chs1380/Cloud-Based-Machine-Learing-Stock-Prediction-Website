@@ -1,10 +1,5 @@
-from flask import Flask, request, render_template
-from flask_sqlalchemy import SQLAlchemy
+from flask import render_template
 from app.Home import bp
-from model import *
-import fileinput
-from config import Config
-from flask_login import login_required
 
 
 @bp.route('/', methods=['GET'])

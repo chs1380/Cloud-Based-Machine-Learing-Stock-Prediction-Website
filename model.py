@@ -24,11 +24,13 @@ class Result(db.Model):
     price_after_360=db.Column(db.Float())
     user_id=db.Column(db.Integer,db.ForeignKey('user.User_id'))
     Model=db.Column(db.String(20),nullable=False)
+    Model_id=db.Column(db.Integer,db.ForeignKey('model.Model_id'))
     def __repr__(self):
         return '<Result %r>' % self.Result_id
 
 class Model(db.Model):
     Model_id = db.Column(db.Integer(),unique=True, primary_key=True, nullable=False)
     Model_name=db.Column(db.String(20),nullable=False)
+    result_model_id=db.relationship('Result',backref='model',lazy=True)
     def __repr__(self):
         return '<Model %r>' % self.Model_name

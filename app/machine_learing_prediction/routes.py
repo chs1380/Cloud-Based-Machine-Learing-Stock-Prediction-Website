@@ -55,9 +55,9 @@ def prediction_fucnction(df):
     df.fillna(0, inplace=True)
 
     # Traning, testing to plot graphs
-    model_10days=joblib.load('app/machine_learing_prediction/LR_10_Days')
-    model_60_days=joblib.load('app/machine_learing_prediction/LR_60_Days')
-    model_365_days=joblib.load('app/machine_learing_prediction/LR_365_Days')
+    model_10days=joblib.load('app/machine_learing_prediction/LR_model_10_Days')
+    model_60_days=joblib.load('app/machine_learing_prediction/LR_model_60_Days')
+    model_365_days=joblib.load('app/machine_learing_prediction/LR_model_365_Days')
 
     prediction = df_today[features_to_fit]
 
@@ -79,14 +79,14 @@ def prediction_fucnction_mlp(df):
     # drop all column except the closing price axis=1 mean colmun
     df.drop(['Open', 'High', 'Low', 'Adj Close', 'Volume'], axis=1, inplace=True)
 
-    # use panda ta library to generate exponential moving average in range of 10 days
-    df.ta.ema(close='Close', length=10, append=True)
+    # use panda ta library to generate rsi in range of 10 days
+    df['RSI']=df.ta.rsi(close='Close', length=10, append=True)
 
     # Price after n days, shift mean make the last -forecast_day data as NAN
     df_today = df.iloc[-1:, :].copy()  # get last row  [ 0:3( 1 - 4 row),0:3( 1-4 column)]
 
     # independent variable
-    features_to_fit = ['Close', 'EMA_10']
+    features_to_fit = ['Close', 'RSI']
 
     df.fillna(0, inplace=True)
 
@@ -128,7 +128,7 @@ def prediction():
                 prediction_record = Result(Stock_code=stock_code, Old_price=price,
                                            price_after_10=round(int(future_price[0]), 3),
                                            price_after_60=round(int(future_price[1]), 3),
-                                           price_after_360=round(int(future_price[2]), 3), Model="linear regression",user_id=current_user.User_id,
+                                           price_after_360=round(int(future_price[2]), 3),Model="linear regression",Model_id=form.ml_model.data,user_id=current_user.User_id,
                                            Date_that_init_predict=datetime.now())
                 # user_id=current_user.User_id)
                 db.session.add(prediction_record)
@@ -151,7 +151,7 @@ def prediction():
                                            price_after_10=round(int(future_price[0]), 3),
                                            price_after_60=round(int(future_price[1]), 3),
                                            price_after_360=round(int(future_price[2]), 3), Model="MLP prediction",
-                                           Date_that_init_predict=datetime.now(),
+                                           Date_that_init_predict=datetime.now(),Model_id=form.ml_model.data,
                                            user_id=current_user.User_id)
                 db.session.add(prediction_record)
                 db.session.commit()
