@@ -26,4 +26,4 @@ artifacts:
   secondary-artifacts:
     imageDetail:
       files:
-        - imagedefinitions.json
+        - imageDetail.json
