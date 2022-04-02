@@ -21,10 +21,8 @@ phases:
       - printf \'{"ImageURI":"%s"}\' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
   artifacts:
     files:
-      - '*'
-    secondary-artifacts: [
-      {
+        - '*'
+    secondary-artifacts:
         imageDetail:
-          files: [ 'imagedefinitions.json' ]
-      }
-    ]
+          files:
+            - imagedefinitions.json
