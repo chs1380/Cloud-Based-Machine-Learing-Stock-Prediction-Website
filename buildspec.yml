@@ -19,11 +19,11 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
-      - printf \'{"ImageURI":"%s"}\' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"ml_website","imageUri":"%s"}]' $REPOSITORY_URI:latest > imagedefinitions.json
 artifacts:
   files:
     - '*'
   secondary-artifacts:
-    imageDetail:
+    imageDefinitions:
       files:
-        - imageDetail.json
+        - imagedefinitions.json
