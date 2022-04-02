@@ -9,18 +9,12 @@ phases:
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       - IMAGE_NAME=${Container_Name}
-  build:
-    commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
-
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
-      - printf '[{"name":"$IMAGE_NAME","imageUri":$REPOSITORY_URI}]' > imagedefinitions.json
+      - printf '[{"name": "'"$IMAGE_NAME"'","imageUri": "'"$imageUri"'"}]' >imagedefinitions.json
 artifacts:
   files:
     - '*'
