@@ -14,7 +14,7 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
-      - printf '{"imageUri":"169747529889.dkr.ecr.ap-southeast-1.amazonaws.com/container_repo:latest"}' > imageDetail.json
+      - printf '{"ImageURI":"169747529889.dkr.ecr.ap-southeast-1.amazonaws.com/container_repo:latest"}' > imageDetail.json
 artifacts:
   files:
     - '*'
