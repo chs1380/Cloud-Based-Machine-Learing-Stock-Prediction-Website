@@ -28,8 +28,9 @@ def login():
     return render_template('Login/login.html', form=form)
 
 
-@login_required
+
 @bp.route('/logout')
+@login_required
 def logout():
     user_id = current_user.get_id()
     logout_user()

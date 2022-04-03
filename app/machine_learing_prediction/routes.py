@@ -31,6 +31,7 @@ def get_history_price(stockCode):
     df.to_csv(stockCode + '.csv')
     return "csv saved"
 
+prediction_histroy=[]
 
 def prediction_fucnction(df):
     df = pd.read_csv(df)
@@ -104,8 +105,8 @@ def prediction_fucnction_mlp(df):
     future_price_365_days = model_365_days.predict(prediction)
     return future_price_10_days, future_price_60_days, future_price_365_days
 
-@login_required
 @bp.route('/ml_predict', methods=['GET', 'POST'])
+@login_required
 def prediction():
     form = ml_form(csrf_enabled=False)
     form.ml_model.choices = [(model.Model_id, model.Model_name) for model in Model.query.all()]
@@ -160,8 +161,5 @@ def prediction():
                     round(int(future_price[0]), 3)),
                       category='success')
                 return redirect('/ml_predict')
-    else:
-        flash('Please register an account to use prediction!',category='danger')
-        return redirect(url_for('Home_Page.home'))
     return render_template('machine_learning_prediction/prediction.html',
                            prediction_histroy=prediction_histroy, form=form)
