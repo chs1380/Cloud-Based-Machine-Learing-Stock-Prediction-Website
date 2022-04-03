@@ -18,7 +18,7 @@ bootstrap = Bootstrap(app)
 mail = Mail(app)
 
 
-from model import User
+
 
 def create_app():
     db.init_app(app)
@@ -27,6 +27,7 @@ def create_app():
     from app.machine_learing_prediction import bp as ml_prediction
     from app.Login import bp as login
     from app.Home import bp as home
+    from model import User
     app.register_blueprint(ml_prediction)
     app.register_blueprint(login)
     app.register_blueprint(home)
