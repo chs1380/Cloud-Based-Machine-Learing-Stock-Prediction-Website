@@ -21,7 +21,6 @@ phases:
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
       - bash ./make_json.sh
-      -
 artifacts:
   files:
     - '*'
