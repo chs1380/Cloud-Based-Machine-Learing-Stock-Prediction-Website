@@ -56,9 +56,9 @@ def prediction_fucnction(df):
     df.fillna(0, inplace=True)
 
     # Traning, testing to plot graphs
-    model_10days=joblib.load('app/machine_learing_prediction/LR_model_10_Days')
-    model_60_days=joblib.load('app/machine_learing_prediction/LR_model_60_Days')
-    model_365_days=joblib.load('app/machine_learing_prediction/LR_model_365_Days')
+    model_10days=joblib.load('app/machine_learing_prediction/LR_10_Days')
+    model_60_days=joblib.load('app/machine_learing_prediction/LR_60_Days')
+    model_365_days=joblib.load('app/machine_learing_prediction/LR_365_Days')
 
     prediction = df_today[features_to_fit]
 
